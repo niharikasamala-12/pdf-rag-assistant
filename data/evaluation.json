@@ -1,0 +1,53 @@
+
+[
+  {
+    "question": "What is Python, and what are its main characteristics?",
+    "expected_answer": "Python is a high-level, general-purpose, object-oriented programming language. It has simple, readable syntax, is open source, supports libraries, and can run across different platforms.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What are the main technical strengths of Python?",
+    "expected_answer": "The book discusses portability, object-oriented programming, community support, advanced features, memory management, and ease of use as technical strengths of Python.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What are the main data types supported by Python?",
+    "expected_answer": "The book groups Python data types into numbers, sequences, dictionaries, Boolean values, and sets. Number types include integers, floating-point numbers, and complex numbers.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What are the three main types of control structures in Python?",
+    "expected_answer": "The three main control structures are sequential statements, decision control statements, and looping statements. Decision structures include if, if-else, nested if, and if-elif-else.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What is a function in Python, and what are its main benefits?",
+    "expected_answer": "A function is a block of code that performs a particular operation when called. Functions help organize code, reduce redundancy, support reuse, accept parameters or arguments, and return results.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What is the difference between strings and lists in Python?",
+    "expected_answer": "A string is a sequence of characters, while a list is an ordered collection of values that can contain different data types. Strings are immutable, whereas lists are mutable and their elements can be changed.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What are tuples and dictionaries, and how do they differ?",
+    "expected_answer": "A tuple is an ordered, immutable collection of items. A dictionary stores data as key-value pairs, allowing values to be accessed through their keys. Tuples use parentheses, while dictionaries use key-value mappings.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What is file handling in Python, and what are the common file access modes?",
+    "expected_answer": "File handling allows programs to create, read, write, and manage files. The open() function opens a file. Common modes include r for reading, w for writing and overwriting, and a for appending; plus signs can enable additional read or write access.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "What is exception handling in Python, and which keywords are used for it?",
+    "expected_answer": "Exception handling manages errors or exceptional events so a program can respond instead of terminating unexpectedly. The book covers try and except blocks, else and finally clauses, raising exceptions, and built-in and user-defined exceptions.",
+    "expected_source": "tutorial.pdf"
+  },
+  {
+    "question": "Which important Python libraries are discussed for machine learning?",
+    "expected_answer": "The book discusses NumPy, Pandas, Scikit-learn, Matplotlib, TensorFlow, Keras, PyTorch, and NLTK as important Python libraries related to machine learning and data processing.",
+    "expected_source": "tutorial.pdf"
+  }
+]

@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My PDF RAG Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6fb;
+            color: #202433;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+        }
+
+        .upload-box, .chat-box {
+            background: white;
+            padding: 22px;
+            border-radius: 12px;
+            margin-top: 20px;
+            box-shadow: 0 2px 12px #0000000c;
+        }
+
+        .upload-area {
+            border: 2px dashed #9aa7bd;
+            padding: 25px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        input[type="file"] {
+            margin: 15px;
+        }
+
+        button {
+            background: #315bea;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 12px 18px;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        #chat {
+            height: 400px;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f9fafc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            padding: 13px;
+            margin: 10px 0;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .user {
+            background: #e4ecff;
+        }
+
+        .bot {
+            background: #e8f7ed;
+        }
+
+        .sources {
+            font-size: 13px;
+            color: #444;
+            margin-top: 12px;
+        }
+
+        .question-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #question {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            min-width: 0;
+        }
+
+        @media(max-width: 600px) {
+            .container {
+                padding: 12px;
+            }
+
+            .question-area {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>PDF RAG Assistant</h1>
+
+    <p class="subtitle">
+        Upload any PDF and ask questions about its content.
+    </p>
+
+    <div class="upload-box">
+        <h3>Upload your PDF</h3>
+
+        <div class="upload-area">
+            <input type="file" id="pdfFile" accept=".pdf,application/pdf">
+            <br>
+            <button id="uploadButton" onclick="uploadPDF()">
+                Upload and Process
+            </button>
+            <p id="status">No PDF uploaded yet.</p>
+        </div>
+    </div>
+
+    <div class="chat-box">
+        <h3>Ask your PDF</h3>
+
+        <div id="chat">
+            <p>Upload a PDF to start asking questions.</p>
+        </div>
+
+        <div class="question-area">
+            <input
+                type="text"
+                id="question"
+                placeholder="Ask something about your PDF..."
+                disabled
+            >
+
+            <button id="sendButton" onclick="askQuestion()" disabled>
+                Send
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const API_URL = "http://127.0.0.1:8000";
+
+let pdfUploaded = false;
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    })[char]);
+}
+
+async function uploadPDF() {
+    const fileInput = document.getElementById("pdfFile");
+    const status = document.getElementById("status");
+    const button = document.getElementById("uploadButton");
+
+    const file = fileInput.files[0];
+
+    // Check whether a PDF is selected
+    if (!file) {
+        status.textContent = "Please select a PDF first.";
+        return;
+    }
+
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
+        status.textContent = "Please select a valid PDF file.";
+        return;
+    }
+
+    // Create FormData before making the request
+    const formData = new FormData();
+    formData.append("file", file);
+
+    button.disabled = true;
+    status.textContent = "Uploading and processing PDF...";
+
+    try {
+        const response = await fetch(`${API_URL}/upload`, {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Upload failed.");
+        }
+
+        pdfUploaded = true;
+
+        status.textContent =
+            `Successfully processed ${data.filename}. ` +
+            `${data.chunks} chunks created.`;
+
+        document.getElementById("question").disabled = false;
+        document.getElementById("sendButton").disabled = false;
+
+        document.getElementById("chat").innerHTML =
+            `<p>Ready! Ask questions about <strong>${
+                escapeHTML(data.filename)
+            }</strong>.</p>`;
+
+    } catch (error) {
+        console.error("Upload error:", error);
+
+        pdfUploaded = false;
+
+        document.getElementById("question").disabled = true;
+        document.getElementById("sendButton").disabled = true;
+
+        status.textContent = "Error: " + error.message;
+
+    } finally {
+        button.disabled = false;
+    }
+}
+
+
+async function askQuestion() {
+    const input = document.getElementById("question");
+    const chat = document.getElementById("chat");
+    const sendButton = document.getElementById("sendButton");
+
+    const question = input.value.trim();
+
+    if (!question || !pdfUploaded) return;
+
+    chat.innerHTML += `
+        <div class="message user">
+            <strong>You:</strong>
+            ${escapeHTML(question)}
+        </div>
+    `;
+
+    input.value = "";
+    sendButton.disabled = true;
+
+    const loading = document.createElement("div");
+    loading.className = "message bot";
+    loading.textContent = "Thinking... Finding the answer in your PDF.";
+    chat.appendChild(loading);
+
+    try {
+        const response = await fetch(`${API_URL}/ask`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Question failed.");
+        }
+
+        const sources = Array.isArray(data.sources)
+            ? data.sources.map(source => {
+                if (typeof source === "string") return source;
+
+                return `${source.source || "PDF"}${
+                    source.page ? ", page " + source.page : ""
+                }`;
+            }).join("\n")
+            : "No sources returned.";
+
+        loading.innerHTML = `
+            <strong>Assistant:</strong>
+
+            <div class="answer">
+                ${escapeHTML(data.answer || "")}
+            </div>
+
+            <div class="sources">
+                <hr>
+                <strong>Sources:</strong>
+                <div>${escapeHTML(sources)}</div>
+            </div>
+        `;
+
+    } catch (error) {
+        loading.textContent = "Error: " + error.message;
+    } finally {
+        sendButton.disabled = false;
+        chat.scrollTop = chat.scrollHeight;
+    }
+}
+
+document.getElementById("question").addEventListener(
+    "keydown",
+    event => {
+        if (event.key === "Enter") askQuestion();
+    }
+);
+</script>
+
+</body>
+</html>
