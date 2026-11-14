@@ -1,0 +1,17 @@
+{
+    "total_questions": 33,
+    "retrieval_hit_rate_percent": 100.0,
+    "mean_precision_at_3": 0.98,
+    "mean_reciprocal_rank": 0.985,
+    "average_retrieval_time_seconds": 2.835,
+    "average_generation_time_seconds": 59.981,
+    "average_total_time_seconds": 62.817,
+    "answer_quality_percent": 98.48,
+    "good_answers": 32,
+    "partial_answers": 1,
+    "poor_answers": 0,
+    "automated_evaluations_completed": 33,
+    "average_faithfulness": 0.739,
+    "average_answer_relevancy": 0.745,
+    "average_context_relevance": 0.745
+}

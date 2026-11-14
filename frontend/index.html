@@ -2,184 +2,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My PDF RAG Assistant</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-PDF RAG Assistant</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6fb;
-            color: #202433;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6fb;
+    color: #202433;
+}
 
-        .container {
-            max-width: 850px;
-            margin: 40px auto;
-            padding: 25px;
-        }
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 20px;
+}
 
-        h1 {
-            text-align: center;
-        }
+h1 {
+    text-align: center;
+}
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-        }
+.subtitle {
+    text-align: center;
+    color: #666;
+}
 
-        .upload-box, .chat-box {
-            background: white;
-            padding: 22px;
-            border-radius: 12px;
-            margin-top: 20px;
-            box-shadow: 0 2px 12px #0000000c;
-        }
+.layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    margin-top: 25px;
+}
 
-        .upload-area {
-            border: 2px dashed #9aa7bd;
-            padding: 25px;
-            text-align: center;
-            border-radius: 10px;
-        }
+.panel {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px #0000000c;
+}
 
-        input[type="file"] {
-            margin: 15px;
-        }
+.upload-area {
+    border: 2px dashed #9aa7bd;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
 
-        button {
-            background: #315bea;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            padding: 12px 18px;
-            cursor: pointer;
-        }
+input[type="file"] {
+    width: 100%;
+    margin: 15px 0;
+}
 
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+button {
+    background: #315bea;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
 
-        #status {
-            margin-top: 12px;
-            font-size: 14px;
-        }
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 
-        #chat {
-            height: 400px;
-            overflow-y: auto;
-            padding: 12px;
-            background: #f9fafc;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
+#status {
+    font-size: 13px;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+}
 
-        .message {
-            padding: 13px;
-            margin: 10px 0;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
+.document {
+    padding: 12px;
+    border: 1px solid #e3e7ef;
+    border-radius: 8px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
 
-        .user {
-            background: #e4ecff;
-        }
+.document-info {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
 
-        .bot {
-            background: #e8f7ed;
-        }
+.document-info small {
+    color: #777;
+}
 
-        .sources {
-            font-size: 13px;
-            color: #444;
-            margin-top: 12px;
-        }
+.document button {
+    background: #e74c3c;
+    padding: 7px 10px;
+}
 
-        .question-area {
-            display: flex;
-            gap: 10px;
-        }
+#documentSelect {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    margin-bottom: 15px;
+}
 
-        #question {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            min-width: 0;
-        }
+#chat {
+    height: 450px;
+    overflow-y: auto;
+    padding: 12px;
+    background: #f9fafc;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
 
-        @media(max-width: 600px) {
-            .container {
-                padding: 12px;
-            }
+.message {
+    padding: 13px;
+    margin: 10px 0;
+    border-radius: 8px;
+    white-space: pre-wrap;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
 
-            .question-area {
-                flex-direction: column;
-            }
-        }
-    </style>
+.user {
+    background: #e4ecff;
+}
+
+.bot {
+    background: #e8f7ed;
+}
+
+.sources {
+    font-size: 13px;
+    color: #444;
+    margin-top: 12px;
+}
+
+.question-area {
+    display: flex;
+    gap: 10px;
+}
+
+#question {
+    flex: 1;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+@media(max-width: 750px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+
+    .question-area {
+        flex-direction: column;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>PDF RAG Assistant</h1>
+<h1>PDF RAG Assistant</h1>
 
-    <p class="subtitle">
-        Upload any PDF and ask questions about its content.
-    </p>
+<p class="subtitle">
+Upload multiple PDFs and ask questions across your documents.
+</p>
 
-    <div class="upload-box">
-        <h3>Upload your PDF</h3>
+<div class="layout">
 
-        <div class="upload-area">
-            <input type="file" id="pdfFile" accept=".pdf,application/pdf">
-            <br>
-            <button id="uploadButton" onclick="uploadPDF()">
-                Upload and Process
-            </button>
-            <p id="status">No PDF uploaded yet.</p>
-        </div>
-    </div>
+<!-- DOCUMENT LIBRARY -->
 
-    <div class="chat-box">
-        <h3>Ask your PDF</h3>
+<div class="panel">
 
-        <div id="chat">
-            <p>Upload a PDF to start asking questions.</p>
-        </div>
+<h3>Document Library</h3>
 
-        <div class="question-area">
-            <input
-                type="text"
-                id="question"
-                placeholder="Ask something about your PDF..."
-                disabled
-            >
+<div class="upload-area">
 
-            <button id="sendButton" onclick="askQuestion()" disabled>
-                Send
-            </button>
-        </div>
-    </div>
+<input
+    type="file"
+    id="pdfFile"
+    accept=".pdf,application/pdf"
+    multiple
+>
+
+<button id="uploadButton" onclick="uploadPDFs()">
+    Upload PDFs
+</button>
+
+<p id="status">Select PDF files to upload.</p>
 
 </div>
 
+<h3>Uploaded Documents</h3>
+
+<div id="documentList">
+Loading documents...
+</div>
+
+</div>
+
+
+<!-- CHAT SECTION -->
+
+<div class="panel">
+
+<h3>Ask Your Documents</h3>
+
+<label for="documentSelect">Search in:</label>
+
+<select id="documentSelect" onchange="updateSelection()">
+    <option value="">All Documents</option>
+</select>
+
+<div id="chat">
+<p>Upload a PDF to start asking questions.</p>
+</div>
+
+<div class="question-area">
+
+<input
+    type="text"
+    id="question"
+    placeholder="Ask something about your documents..."
+>
+
+<button id="sendButton" onclick="askQuestion()">
+    Send
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
 <script>
+
 const API_URL = "http://127.0.0.1:8000";
 
-let pdfUploaded = false;
+let documents = [];
+let selectedDocumentId = "";
+
 
 function escapeHTML(value) {
+
     return String(value).replace(/[&<>"']/g, char => ({
         "&": "&amp;",
         "<": "&lt;",
@@ -187,83 +266,295 @@ function escapeHTML(value) {
         '"': "&quot;",
         "'": "&#39;"
     })[char]);
+
 }
 
-async function uploadPDF() {
-    const fileInput = document.getElementById("pdfFile");
+
+// --------------------------------
+// LOAD DOCUMENTS
+// --------------------------------
+
+async function loadDocuments() {
+
+    const response = await fetch(`${API_URL}/documents`);
+
+    const data = await response.json();
+
+    if (!response.ok) {
+        throw new Error(data.detail || "Could not load documents.");
+    }
+
+    documents = data.documents || [];
+
+    renderDocuments();
+
+    renderDocumentSelect();
+
+}
+
+
+// --------------------------------
+// DISPLAY DOCUMENT LIBRARY
+// --------------------------------
+
+function renderDocuments() {
+
+    const container = document.getElementById("documentList");
+
+    if (documents.length === 0) {
+
+        container.innerHTML = "<p>No documents uploaded yet.</p>";
+
+        return;
+    }
+
+    container.innerHTML = documents.map(doc => `
+
+        <div class="document">
+
+            <div class="document-info">
+
+                <strong>${escapeHTML(doc.filename)}</strong>
+
+                <br>
+
+                <small>${doc.chunks} chunks</small>
+
+            </div>
+
+            <button onclick="deleteDocument('${escapeHTML(doc.document_id)}')">
+                Delete
+            </button>
+
+        </div>
+
+    `).join("");
+
+}
+
+
+// --------------------------------
+// DOCUMENT SELECTOR
+// --------------------------------
+
+function renderDocumentSelect() {
+
+    const select = document.getElementById("documentSelect");
+
+    const previousSelection = selectedDocumentId;
+
+    select.innerHTML = `
+        <option value="">All Documents</option>
+
+        ${documents.map(doc => `
+            <option value="${escapeHTML(doc.document_id)}">
+                ${escapeHTML(doc.filename)}
+            </option>
+        `).join("")}
+    `;
+
+    const selectionExists = documents.some(
+        doc => doc.document_id === previousSelection
+    );
+
+    selectedDocumentId = selectionExists
+        ? previousSelection
+        : "";
+
+    select.value = selectedDocumentId;
+
+}
+
+
+function updateSelection() {
+
+    selectedDocumentId =
+        document.getElementById("documentSelect").value;
+
+    const selected = documents.find(
+        doc => doc.document_id === selectedDocumentId
+    );
+
+    const chat = document.getElementById("chat");
+
+    chat.innerHTML = selected
+        ? `<p>Now asking questions about <strong>${escapeHTML(selected.filename)}</strong>.</p>`
+        : "<p>Now searching across all uploaded documents.</p>";
+
+}
+
+
+// --------------------------------
+// UPLOAD MULTIPLE PDFs
+// --------------------------------
+
+async function uploadPDFs() {
+
+    const input = document.getElementById("pdfFile");
+
     const status = document.getElementById("status");
+
     const button = document.getElementById("uploadButton");
 
-    const file = fileInput.files[0];
+    const files = Array.from(input.files);
 
-    // Check whether a PDF is selected
-    if (!file) {
-        status.textContent = "Please select a PDF first.";
+    if (files.length === 0) {
+
+        status.textContent = "Please select at least one PDF.";
+
         return;
     }
 
-    if (!file.name.toLowerCase().endsWith(".pdf")) {
-        status.textContent = "Please select a valid PDF file.";
+    if (files.some(file => !file.name.toLowerCase().endsWith(".pdf"))) {
+
+        status.textContent = "Only PDF files are allowed.";
+
         return;
     }
-
-    // Create FormData before making the request
-    const formData = new FormData();
-    formData.append("file", file);
 
     button.disabled = true;
-    status.textContent = "Uploading and processing PDF...";
+
+    const successful = [];
+
+    const failed = [];
 
     try {
-        const response = await fetch(`${API_URL}/upload`, {
-            method: "POST",
-            body: formData
-        });
 
-        const data = await response.json();
+        for (let i = 0; i < files.length; i++) {
 
-        if (!response.ok) {
-            throw new Error(data.detail || "Upload failed.");
+            const file = files[i];
+
+            status.textContent =
+                `Uploading ${i + 1} of ${files.length}: ${file.name}`;
+
+            const formData = new FormData();
+
+            formData.append("file", file);
+
+            try {
+
+                const response = await fetch(`${API_URL}/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.detail || "Upload failed.");
+                }
+
+                successful.push(data);
+
+            } catch (error) {
+
+                failed.push(`${file.name}: ${error.message}`);
+
+            }
+
         }
 
-        pdfUploaded = true;
+        await loadDocuments();
 
         status.textContent =
-            `Successfully processed ${data.filename}. ` +
-            `${data.chunks} chunks created.`;
+            `${successful.length} uploaded successfully. ` +
+            `${failed.length} failed.`;
 
-        document.getElementById("question").disabled = false;
-        document.getElementById("sendButton").disabled = false;
+        if (successful.length > 0) {
 
-        document.getElementById("chat").innerHTML =
-            `<p>Ready! Ask questions about <strong>${
-                escapeHTML(data.filename)
-            }</strong>.</p>`;
+            document.getElementById("chat").innerHTML =
+                "<p>Your documents are ready! Ask a question.</p>";
+
+        }
+
+        if (failed.length > 0) {
+
+            alert("Upload errors:\n" + failed.join("\n"));
+
+        }
+
+        input.value = "";
 
     } catch (error) {
-        console.error("Upload error:", error);
-
-        pdfUploaded = false;
-
-        document.getElementById("question").disabled = true;
-        document.getElementById("sendButton").disabled = true;
 
         status.textContent = "Error: " + error.message;
 
     } finally {
+
         button.disabled = false;
+
     }
+
 }
 
 
+// --------------------------------
+// DELETE DOCUMENT
+// --------------------------------
+
+async function deleteDocument(documentId) {
+
+    const doc = documents.find(
+        item => item.document_id === documentId
+    );
+
+    if (!confirm(`Delete ${doc?.filename || "this document"}?`)) {
+        return;
+    }
+
+    try {
+
+        const response = await fetch(
+            `${API_URL}/documents/${encodeURIComponent(documentId)}`,
+            { method: "DELETE" }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Delete failed.");
+        }
+
+        if (selectedDocumentId === documentId) {
+            selectedDocumentId = "";
+        }
+
+        await loadDocuments();
+
+        document.getElementById("chat").innerHTML =
+            "<p>Document deleted successfully.</p>";
+
+    } catch (error) {
+
+        alert("Error: " + error.message);
+
+    }
+
+}
+
+
+// --------------------------------
+// ASK QUESTION
+// --------------------------------
+
 async function askQuestion() {
+
     const input = document.getElementById("question");
+
     const chat = document.getElementById("chat");
-    const sendButton = document.getElementById("sendButton");
+
+    const button = document.getElementById("sendButton");
 
     const question = input.value.trim();
 
-    if (!question || !pdfUploaded) return;
+    if (!question) return;
+
+    if (documents.length === 0) {
+
+        alert("Upload a PDF first.");
+
+        return;
+    }
 
     chat.innerHTML += `
         <div class="message user">
@@ -273,66 +564,113 @@ async function askQuestion() {
     `;
 
     input.value = "";
-    sendButton.disabled = true;
+
+    button.disabled = true;
 
     const loading = document.createElement("div");
+
     loading.className = "message bot";
-    loading.textContent = "Thinking... Finding the answer in your PDF.";
+
+    loading.textContent = "Searching documents and generating answer...";
+
     chat.appendChild(loading);
 
+    chat.scrollTop = chat.scrollHeight;
+
     try {
+
         const response = await fetch(`${API_URL}/ask`, {
+
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ question })
+
+            body: JSON.stringify({
+
+                question: question,
+
+                document_id: selectedDocumentId || null
+
+            })
+
         });
 
         const data = await response.json();
 
         if (!response.ok) {
+
             throw new Error(data.detail || "Question failed.");
+
         }
 
         const sources = Array.isArray(data.sources)
-            ? data.sources.map(source => {
-                if (typeof source === "string") return source;
-
-                return `${source.source || "PDF"}${
-                    source.page ? ", page " + source.page : ""
-                }`;
-            }).join("\n")
+            ? data.sources.map(source =>
+                `${source.source || "PDF"}, page ${source.page ?? "Unknown"}`
+            ).join("\n")
             : "No sources returned.";
 
         loading.innerHTML = `
+
             <strong>Assistant:</strong>
 
-            <div class="answer">
-                ${escapeHTML(data.answer || "")}
-            </div>
+            <div>${escapeHTML(data.answer || "")}</div>
 
             <div class="sources">
+
                 <hr>
+
                 <strong>Sources:</strong>
+
                 <div>${escapeHTML(sources)}</div>
+
             </div>
+
         `;
 
     } catch (error) {
+
         loading.textContent = "Error: " + error.message;
+
     } finally {
-        sendButton.disabled = false;
+
+        button.disabled = false;
+
         chat.scrollTop = chat.scrollHeight;
+
     }
+
 }
+
+
+// --------------------------------
+// ENTER KEY
+// --------------------------------
 
 document.getElementById("question").addEventListener(
     "keydown",
     event => {
-        if (event.key === "Enter") askQuestion();
+
+        if (event.key === "Enter") {
+            askQuestion();
+        }
+
     }
 );
+
+
+// --------------------------------
+// INITIALIZE APPLICATION
+// --------------------------------
+
+loadDocuments().catch(error => {
+
+    document.getElementById("documentList").textContent =
+        "Could not connect to the API: " + error.message;
+
+});
+
 </script>
 
 </body>

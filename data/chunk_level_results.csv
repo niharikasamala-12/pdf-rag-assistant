@@ -1,0 +1,34 @@
+question_id,question,relevant_chunks_in_top_3,total_relevant_in_candidates,precision_at_3,recall_at_3,reciprocal_rank
+1,What is a Finite Automaton? Explain its five components.,2,5,0.6667,0.4,1.0
+2,Differentiate between DFA and NFA.,1,3,0.3333,0.3333,1.0
+3,What is a Regular Expression? Explain Kleene Closure.,3,6,1.0,0.5,1.0
+4,What is MySQL? Differentiate between a database and a table.,1,1,0.3333,1.0,1.0
+5,"Explain the SQL commands DDL, DML, and DQL with examples.",1,3,0.3333,0.3333,1.0
+6,Differentiate between WHERE and HAVING clauses in MySQL.,1,2,0.3333,0.5,1.0
+7,Explain the important characteristics of Python.,2,6,0.6667,0.3333,1.0
+8,Explain the different data types available in Python.,2,2,0.6667,1.0,1.0
+9,What are functions in Python? Explain their advantages.,2,3,0.6667,0.6667,1.0
+10,Name and explain some Python libraries used in Machine Learning.,1,1,0.3333,1.0,1.0
+11,"Define Alphabet, String, and Language in Automata Theory with examples.",1,1,0.3333,1.0,1.0
+12,Explain the different representations of Finite Automata.,3,8,1.0,0.375,1.0
+13,Explain the transition function of a Deterministic Finite Automaton (DFA).,1,5,0.3333,0.2,1.0
+14,Explain the transition function of a Non-Deterministic Finite Automaton (NFA).,2,5,0.6667,0.4,1.0
+15,Explain how to design a DFA to accept odd binary numbers.,2,4,0.6667,0.5,1.0
+16,Explain Positive Closure in Regular Expressions with an example.,1,4,0.3333,0.25,1.0
+17,Write regular expressions for different sets of binary strings with examples.,3,7,1.0,0.4286,1.0
+18,What are primary keys and foreign keys in MySQL? Explain their importance.,1,1,0.3333,1.0,1.0
+19,Explain the different JOIN operations in MySQL.,2,3,0.6667,0.6667,1.0
+20,What is a subquery in MySQL? Explain its types with examples.,3,3,1.0,1.0,1.0
+21,What is a VIEW in MySQL? Explain its advantages with an example.,1,1,0.3333,1.0,1.0
+22,What are indexes in MySQL? Explain how they improve query performance.,1,1,0.3333,1.0,1.0
+23,Explain GROUP BY and aggregate functions in MySQL with examples.,3,5,1.0,0.6,1.0
+24,Explain the different data types available in MySQL with examples.,0,0,0.0,0,0
+25,Explain the control flow statements available in Python.,1,2,0.3333,0.5,0.3333
+26,"Explain if, if-else, nested if, and if-elif-else statements in Python.",1,3,0.3333,0.3333,1.0
+27,Differentiate between for loop and while loop in Python.,0,0,0.0,0,0
+28,"Explain break, continue, and pass statements in Python.",0,0,0.0,0,0
+29,What are operators and expressions in Python? Explain their importance.,3,3,1.0,1.0,1.0
+30,What are modules and packages in Python? Explain their advantages.,3,5,1.0,0.6,1.0
+31,Explain the role of Machine Learning in Python and its basic working process.,3,6,1.0,0.5,1.0
+32,Differentiate between traditional programming and Machine Learning.,1,1,0.3333,1.0,1.0
+33,Differentiate between supervised learning and unsupervised learning.,3,3,1.0,1.0,1.0

@@ -1,0 +1,7 @@
+{
+    "total_questions": 33,
+    "total_candidates": 330,
+    "mean_precision_at_3": 0.5556,
+    "mean_recall_at_3": 0.5885,
+    "mean_reciprocal_rank": 0.8889
+}
