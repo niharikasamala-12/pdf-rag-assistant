@@ -16,6 +16,9 @@ data/uploads/
 
 # Evaluation output
 data/evaluation_results.csv
+data/all_chunks.json
+data/chunk_candidates.json
+data/chunk_candidates_labeled.json
 
 # IDE
 .vscode/
